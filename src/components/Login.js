@@ -4,21 +4,27 @@ import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { authenticateUser, getUser } = useContext(AuthContext)
-  const history = useHistory()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { setIsAuthenticated, setUser } = useContext(AuthContext);
+  const history = useHistory();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await axios.post('http://127.0.0.1:3333/auth/login', { email, password });
+    const LoginResponse = await axios.post('http://127.0.0.1:3333/auth/login', { email, password });
 
-    localStorage.setItem('token', response.data);
+    localStorage.setItem('token', LoginResponse.data);
 
-    authenticateUser(true);
+    setIsAuthenticated(true);
 
-    getUser(response.data);
+    const userResponse = await axios.get('http://127.0.0.1:3333/auth/user', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    setUser(userResponse.data);
 
     history.push('/');
   }

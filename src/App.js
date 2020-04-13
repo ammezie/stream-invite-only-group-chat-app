@@ -9,8 +9,8 @@ import AuthContextProvider from './contexts/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <AuthContextProvider>
+    <AuthContextProvider>
+      <Router>
         <Navbar />
 
         <Switch>
@@ -19,8 +19,8 @@ function App() {
           <Route path='/invite' component={Invite} />
           <Route path='/invites/:token' component={Register} />
         </Switch>
-      </AuthContextProvider>
-    </Router>
+      </Router>
+    </AuthContextProvider>
   );
 }
 

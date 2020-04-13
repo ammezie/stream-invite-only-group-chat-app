@@ -4,17 +4,12 @@ import React, { createContext, useState } from 'react';
 export const AuthContext = createContext();
 
 const AuthContextProvider = (props) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const token = localStorage.getItem('token');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+  const [user, setUser] = useState({});
 
-  console.log(isAuthenticated)
-
-  const authenticateUser = (value) => {
-    setIsAuthenticated(value)
-  }
-
-  const getUser = async (token) => {
-    const response = await axios.get('http://127.0.0.1:3333/auth/me', {
+  const getUser = async () => {
+    const response = await axios.get('http://127.0.0.1:3333/auth/user', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -23,12 +18,8 @@ const AuthContextProvider = (props) => {
     setUser(response.data);
   }
 
-  // const getUser = (user) => {
-  //   setUser(user)
-  // }
-
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, authenticateUser, getUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, user, getUser }}>
       {props.children}
     </AuthContext.Provider>
   );

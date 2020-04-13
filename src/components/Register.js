@@ -1,24 +1,20 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Register = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const { setIsAuthenticated, setUser } = useContext(AuthContext);
   const history = useHistory();
   const { token } = useParams();
 
   useEffect(() => {
     async function fetchInvite() {
-      try {
-        const response = await axios.get(`http://127.0.0.1:3333/invites/${token}`);
-        console.log(response.data)
-        setEmail(response.data.email);
-      } catch (error) {
-        // setError(err)
-      }
+      const response = await axios.get(`http://127.0.0.1:3333/invites/${token}`);
+      setEmail(response.data.email);
     }
 
     fetchInvite();
@@ -29,7 +25,10 @@ const Register = () => {
 
     const response = await axios.post('http://127.0.0.1:3333/auth/register', { email, username, password });
 
-    localStorage.setItem('token', response.data);
+    localStorage.setItem('token', response.data.token);
+
+    setIsAuthenticated(true);
+    setUser(response.data.user);
 
     history.push('/');
   }
