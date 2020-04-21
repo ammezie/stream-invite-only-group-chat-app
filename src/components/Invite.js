@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Invite = () => {
-  const { getUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [email, setEmail] = useState('');
 
   useEffect(() => {
-    getUser();
+    console.log(user);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
